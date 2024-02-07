@@ -10,11 +10,15 @@ import android.view.autofill.AutofillValue;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     List<TodoItem> todoItemList;
+    ListView listView = findViewById(R.id.listView);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         MockData();
 
 
+        //reads from internal storage and stores the file in a string
+        String content = readFromFile("file.txt");
+        Toast.makeText(this, content.getBytes().toString(), Toast.LENGTH_SHORT).show();
+
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +52,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String readFromFile(String fileName) {
+        File path = getApplicationContext().getFilesDir();
+        File readFrom = new File(path,fileName);
+        byte[] content = new byte[(int) readFrom.length()];
+
+
+        try {
+            FileInputStream stream = new FileInputStream(readFrom);
+            stream.read(content);
+            return new String(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
     }
 
     void MockData() {
@@ -57,13 +82,16 @@ public class MainActivity extends AppCompatActivity {
         t2.createdAt = LocalDateTime.now();
         t2.deadline = LocalDateTime.parse("2024-03-08T12:00");
         todoItemList.add(t2);
-        showItems();
     }
+
+
 
     void showItems() {
         ArrayAdapter<TodoItem> adapter = new TodoAdapter(this, todoItemList);
         ((ListView)findViewById(R.id.listView)).setAdapter(adapter);
     }
+
+
 
     void load(){
         String json = getSharedPreferences("TodoList", Context.MODE_PRIVATE)
