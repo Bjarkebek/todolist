@@ -12,7 +12,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -51,7 +54,8 @@ public class TaskCreateActivity extends AppCompatActivity {
                             deadline_time.getMinute()
                     );
 
-                    // add task to list
+                    // add task to internal storage
+                    writeToFile("file.txt",task.name.toString());
 
 
                     // routes back to main page
@@ -62,4 +66,17 @@ public class TaskCreateActivity extends AppCompatActivity {
         });
 
     }
+
+    public void writeToFile(String fileName, String content){
+        File path = getApplicationContext().getFilesDir();
+        try {
+            FileOutputStream writer = new FileOutputStream(new File(path, fileName));
+            writer.write(content.getBytes());
+            writer.close();
+            Toast.makeText(this, fileName, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
