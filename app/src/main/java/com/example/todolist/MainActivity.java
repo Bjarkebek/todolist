@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     void MockData() {
         TodoItem t1 = new TodoItem();
         t1.name = "gør noget";

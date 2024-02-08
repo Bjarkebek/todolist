@@ -21,6 +21,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
         super(context, R.layout.view_todo, items);
     }
 
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
